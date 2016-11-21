@@ -6,6 +6,10 @@ import {
 } from '@angular/core/testing';
 
 import {
+  ComponentFactoryResolver
+} from '@angular/core';
+
+import {
   expect
 } from '../testing';
 
@@ -18,6 +22,7 @@ import { ModalTest2Component } from './fixtures/modal.component2.fixture';
 describe('Modal component', () => {
   let applicationRef: ApplicationRef;
   let modalService: SkyModalService;
+  let resolver: ComponentFactoryResolver;
 
   function openModal(modalType: any, providers?: any[]) {
     let modalInstance = modalService.open(modalType, providers);
@@ -43,20 +48,27 @@ describe('Modal component', () => {
     inject(
       [
         ApplicationRef,
-        SkyModalService
+        SkyModalService,
+        ComponentFactoryResolver
       ],
       (
         _applicationRef: ApplicationRef,
-        _modalService: SkyModalService
+        _modalService: SkyModalService,
+        _resolver: ComponentFactoryResolver
       ) => {
         applicationRef = _applicationRef;
         modalService = _modalService;
+        resolver = _resolver;
       }
     )
   );
 
   it('should render on top of previously-opened modals', fakeAsync(() => {
+    console.log('this resolves fine');
+    resolver.resolveComponentFactory(ModalTest2Component);
+    console.log('this does not');
     let modalInstance1 = openModal(ModalTest2Component);
+    console.log('will not get here');
     let modalInstance2 = openModal(ModalTest2Component);
 
     let modalEls = document.querySelectorAll('.sky-modal');
